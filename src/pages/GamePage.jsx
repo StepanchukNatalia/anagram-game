@@ -1,38 +1,67 @@
-import React, { useState } from 'react';
+import React from 'react';
 import GameLayout from '../components/layout/GameLayout';
 import Button from '../components/ui/Button';
 import LetterCard from '../components/ui/LetterCard';
+import { useAnagramGame } from '../hooks/useAnagramGame';
 
 const GamePage = ({ onFinish }) => {
-  const scrambledWord = ['А', 'М', 'Р', 'Г', 'А', 'Н', 'А']; 
-  const [currentInput, setCurrentInput] = useState('');
+  const {
+    scrambledLetters,
+    inputValue,
+    message,
+    handleInputChange,
+    checkAnswer,
+    showHint,
+    isHintUsed
+  } = useAnagramGame(onFinish);
 
   return (
     <GameLayout title="Вгадайте слово">
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-        {scrambledWord.map((char, index) => (
+      
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '30px' }}>
+        {scrambledLetters.map((char, index) => (
           <LetterCard key={index} letter={char} />
         ))}
       </div>
 
-      <input 
-        type="text" 
-        placeholder="Ваша відповідь..." 
-        value={currentInput}
-        onChange={(e) => setCurrentInput(e.target.value)}
-        style={{ padding: '10px', fontSize: '16px', marginBottom: '20px' }}
-      />
+      <div style={{ marginBottom: '20px' }}>
+        <input 
+          type="text" 
+          placeholder="Введіть слово..." 
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={(e) => e.key === 'Enter' && checkAnswer()} 
+          style={{ 
+            padding: '12px', 
+            fontSize: '18px', 
+            textAlign: 'center', 
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
+            borderRadius: '8px',
+            border: '1px solid #ccc',
+            width: '80%'
+          }}
+        />
+      </div>
 
-      <div>
-        <Button onClick={() => console.log('Підказка')}>Підказка</Button>
-        <Button onClick={() => onFinish(true)}>Перевірити</Button> 
+      <div style={{ minHeight: '30px', color: message.startsWith('Невірно') ? 'salmon' : '#4caf50', marginBottom: '20px', fontWeight: 'bold' }}>
+        {message}
       </div>
-      
-       <div style={{marginTop: '20px', fontSize: '12px', color: '#888'}}>
-        <button onClick={() => onFinish(false)}>
-           (DEV: Примусово завершити гру)
-        </button>
+
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        <Button 
+          onClick={showHint} 
+          disabled={isHintUsed} 
+          variant="secondary"
+        >
+          Підказка
+        </Button>
+        
+        <Button onClick={checkAnswer}>
+          Перевірити
+        </Button>
       </div>
+
     </GameLayout>
   );
 };
