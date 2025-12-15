@@ -1,19 +1,23 @@
 import React from 'react';
 
-const LetterCard = ({ letter, status = 'default' }) => {
+const LetterCard = ({ letter }) => {
   const style = {
-    width: '40px',
-    height: '40px',
+    width: '65px',
+    height: '65px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '2px solid #ccc',
-    borderRadius: '4px',
-    fontSize: '20px',
-    fontWeight: 'bold',
-    margin: '0 5px',
-    backgroundColor: status === 'selected' ? '#e0e0e0' : 'white',
-    color: '#333'
+    background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+    color: '#333',
+    borderRadius: '16px',
+    fontSize: '32px',
+    fontWeight: '800',
+    boxShadow: '0 6px 10px rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.5)',
+    margin: '0 8px',
+    textTransform: 'uppercase',
+    userSelect: 'none',
+    transform: 'perspective(500px) rotateX(5deg)',
+    borderBottom: '6px solid #ccc'
   };
 
   return <div style={style}>{letter}</div>;

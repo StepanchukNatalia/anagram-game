@@ -12,35 +12,28 @@ const GamePage = ({ onFinish }) => {
     handleInputChange,
     checkAnswer,
     showHint,
-    isHintUsed
+    skipWord,
+    isHintUsed,
+    timeLeft
   } = useAnagramGame(onFinish);
 
   return (
-    <GameLayout title="Вгадайте слово">
+    <GameLayout title={`Час: ${timeLeft} сек`}>
       
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '30px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '30px', flexWrap: 'wrap' }}>
         {scrambledLetters.map((char, index) => (
           <LetterCard key={index} letter={char} />
         ))}
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ marginBottom: '20px', width: '100%', display: 'flex', justifyContent: 'center' }}>
         <input 
           type="text" 
+          className="game-input"
           placeholder="Введіть слово..." 
           value={inputValue}
           onChange={handleInputChange}
-          onKeyDown={(e) => e.key === 'Enter' && checkAnswer()} 
-          style={{ 
-            padding: '12px', 
-            fontSize: '18px', 
-            textAlign: 'center', 
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            borderRadius: '8px',
-            border: '1px solid #ccc',
-            width: '80%'
-          }}
+          onKeyDown={(e) => e.key === 'Enter' && checkAnswer()}
         />
       </div>
 
@@ -48,13 +41,22 @@ const GamePage = ({ onFinish }) => {
         {message}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
+        
         <Button 
           onClick={showHint} 
           disabled={isHintUsed} 
           variant="secondary"
         >
-          Підказка
+          Підказка (-10с)
+        </Button>
+
+        <Button 
+            onClick={skipWord} 
+            variant="outline"
+            style={{ borderColor: 'salmon', color: 'salmon' }}
+        >
+            Пропустити
         </Button>
         
         <Button onClick={checkAnswer}>
