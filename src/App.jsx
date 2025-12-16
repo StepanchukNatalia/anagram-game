@@ -4,12 +4,11 @@ import StartPage from './pages/StartPage';
 import GamePage from './pages/GamePage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
-import { SettingsProvider } from './context/SettingsContext';
+import LeaderboardPage from './pages/LeaderboardPage'; 
 import './styles/App.css';
 
 function App() {
   return (
-    <SettingsProvider>
       <BrowserRouter>
         <div className="app-container">
           <Routes>
@@ -17,10 +16,10 @@ function App() {
             <Route path="/game" element={<GamePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile/:id" element={<ProfilePage />} />
+            <Route path="/leaderboard" element={<LeaderboardPage />} /> 
           </Routes>
         </div>
       </BrowserRouter>
-    </SettingsProvider>
   );
 }
 
