@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { WORDS } from '../constants/words';
 import { shuffleString } from '../utils/shuffle';
-import { useSettings } from '../context/SettingsContext';
+import { useSettingsStore } from '../store/useSettingsStore';
 
 export const useAnagramGame = (onGameFinish) => {
-  const { settings } = useSettings();
+  const timeLimit = useSettingsStore((state) => state.timeLimit);
+  const difficulty = useSettingsStore((state) => state.difficulty);
+  const allowHints = useSettingsStore((state) => state.allowHints);
   
   const [currentWordObj, setCurrentWordObj] = useState(null);
   const [scrambledLetters, setScrambledLetters] = useState([]);
@@ -12,11 +14,11 @@ export const useAnagramGame = (onGameFinish) => {
   const [message, setMessage] = useState('');
   const [isHintUsed, setIsHintUsed] = useState(false);
   
-  const [timeLeft, setTimeLeft] = useState(settings.timeLimit);
+  const [timeLeft, setTimeLeft] = useState(timeLimit);
   const [isTimerActive, setIsTimerActive] = useState(false);
 
   const startNewRound = useCallback(() => {
-    const availableWords = WORDS.filter(w => w.level === settings.difficulty);
+    const availableWords = WORDS.filter(w => w.level === difficulty);
     const pool = availableWords.length > 0 ? availableWords : WORDS;
 
     const randomIndex = Math.floor(Math.random() * pool.length);
@@ -27,13 +29,14 @@ export const useAnagramGame = (onGameFinish) => {
     setInputValue('');
     setMessage('');
     setIsHintUsed(false);
-    setTimeLeft(settings.timeLimit);
+    
+    setTimeLeft(timeLimit);
     setIsTimerActive(true); 
-  }, [settings.difficulty, settings.timeLimit]);
+  }, [difficulty, timeLimit]);
 
   const skipWord = () => {
      setMessage('Слово пропущено!');
-     setIsTimerActive(false);
+     setIsTimerActive(false); 
      setTimeout(() => {
          startNewRound();
      }, 500);
@@ -47,7 +50,7 @@ export const useAnagramGame = (onGameFinish) => {
     if (!isTimerActive) return;
 
     if (timeLeft <= 0) {
-      setIsTimerActive(false); 
+      setIsTimerActive(false);
       onGameFinish(false);
       return;
     }
@@ -66,6 +69,7 @@ export const useAnagramGame = (onGameFinish) => {
 
   const checkAnswer = () => {
     if (!currentWordObj) return;
+    
     if (inputValue === currentWordObj.original) {
       setIsTimerActive(false); 
       onGameFinish(true);
@@ -75,10 +79,11 @@ export const useAnagramGame = (onGameFinish) => {
   };
 
   const showHint = () => {
-    if (!settings.allowHints) {
+    if (!allowHints) {
         setMessage('Підказки вимкнено в налаштуваннях!');
         return;
     }
+    
     if (currentWordObj && !isHintUsed) {
       setMessage(`Підказка: ${currentWordObj.hint}`);
       setIsHintUsed(true);
