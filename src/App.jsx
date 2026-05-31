@@ -5,6 +5,7 @@ import GamePage from './pages/GamePage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import { SettingsProvider } from './context/SettingsContext';
+import CookieConsent from './components/privacy/CookieConsent';
 import './styles/App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile/:id" element={<ProfilePage />} />
           </Routes>
+          <CookieConsent />
         </div>
       </BrowserRouter>
     </SettingsProvider>
