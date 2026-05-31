@@ -118,6 +118,7 @@ Additional DOCS practice documents are available in:
 - `docs/SSD.md` - System Specification Document.
 - `docs/BRD.md` - Business Requirements Document.
 - `docs/openapi.yaml` - Swagger/OpenAPI description for two planned API endpoints.
+- `docs/STUDENT_DOCS.md` - student documentation in a diploma-project-like format.
 
 ## Storybook
 
