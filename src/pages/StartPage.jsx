@@ -5,7 +5,10 @@ import Button from '../components/ui/Button';
 
 const StartPage = () => {
   const navigate = useNavigate(); 
-  const randomId = Math.floor(Math.random() * 1000) + 1;
+  const openProfile = () => {
+    const randomId = Math.floor(Math.random() * 1000) + 1;
+    navigate(`/profile/${randomId}`);
+  };
 
   return (
     <GameLayout title="Анаграми">
@@ -16,7 +19,7 @@ const StartPage = () => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', maxWidth: '300px' }}>
         <Button onClick={() => navigate('/game')} variant="primary">Почати гру</Button>
         <Button onClick={() => navigate('/settings')} variant="secondary">Налаштування</Button>
-        <Button onClick={() => navigate(`/profile/${randomId}`)} variant="outline">Мій профіль</Button>
+        <Button onClick={openProfile} variant="outline">Мій профіль</Button>
       </div>
     </GameLayout>
   );

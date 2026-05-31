@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { WORDS } from '../constants/words';
 import { shuffleString } from '../utils/shuffle';
 import { useSettings } from '../context/SettingsContext';

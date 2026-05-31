@@ -1,0 +1,16 @@
+{
+  "source": {
+    "include": ["src/docs", "src/hooks", "src/utils"],
+    "includePattern": ".+\\.js$"
+  },
+  "opts": {
+    "destination": "docs/generated",
+    "encoding": "utf8",
+    "recurse": true,
+    "readme": "docs/overview.md"
+  },
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true
+  }
+}
