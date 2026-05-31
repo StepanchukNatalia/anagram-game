@@ -1,0 +1,219 @@
+openapi: 3.0.3
+info:
+  title: Anagram Game API
+  version: 1.0.0
+  description: >
+    Planned backend API contract for the Anagram Game project. The current
+    application is frontend-only, but this Swagger/OpenAPI document describes
+    two endpoints that can be implemented by a future backend service.
+  contact:
+    name: Степанчук Наталія
+    email: vt232_sno@student.ztu.edu.ua
+  license:
+    name: MIT
+    url: ../LICENSE
+servers:
+  - url: http://localhost:3000
+    description: Local development API server
+tags:
+  - name: Words
+    description: Word selection operations
+  - name: Anagrams
+    description: Anagram answer validation operations
+paths:
+  /api/words/random:
+    get:
+      tags:
+        - Words
+      summary: Get a random anagram word
+      description: Returns one random word for the selected difficulty level.
+      operationId: getRandomWord
+      parameters:
+        - name: difficulty
+          in: query
+          required: false
+          description: Requested game difficulty.
+          schema:
+            type: string
+            enum:
+              - easy
+              - normal
+              - hard
+            default: normal
+      responses:
+        '200':
+          description: Random word returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordResponse'
+              example:
+                id: word-001
+                shuffled: АРГАНАМА
+                hint: Зашифроване слово з переставленими літерами
+                level: normal
+                timeLimit: 60
+        '400':
+          description: Invalid difficulty value.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Difficulty must be easy, normal, or hard.
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Failed to select a word.
+  /api/anagrams/check:
+    post:
+      tags:
+        - Anagrams
+      summary: Check an anagram answer
+      description: Validates the player's answer for the selected word.
+      operationId: checkAnagramAnswer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckAnswerRequest'
+            example:
+              wordId: word-001
+              answer: АНАГРАМА
+      responses:
+        '200':
+          description: Answer checked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckAnswerResponse'
+              examples:
+                correct:
+                  summary: Correct answer
+                  value:
+                    correct: true
+                    normalizedAnswer: АНАГРАМА
+                    message: Correct answer.
+                    nextAction: finish
+                incorrect:
+                  summary: Incorrect answer
+                  value:
+                    correct: false
+                    normalizedAnswer: АРГАНАМА
+                    message: Incorrect answer. Try again.
+                    nextAction: retry
+        '400':
+          description: Validation error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: wordId and answer are required.
+        '404':
+          description: Word not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Word was not found.
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Failed to check answer.
+components:
+  schemas:
+    WordResponse:
+      type: object
+      required:
+        - id
+        - shuffled
+        - hint
+        - level
+        - timeLimit
+      properties:
+        id:
+          type: string
+          description: Unique word identifier.
+          example: word-001
+        shuffled:
+          type: string
+          description: Shuffled letters shown to the player.
+          example: АРГАНАМА
+        hint:
+          type: string
+          description: Optional hint for the word.
+          example: Зашифроване слово з переставленими літерами
+        level:
+          type: string
+          enum:
+            - easy
+            - normal
+            - hard
+          example: normal
+        timeLimit:
+          type: integer
+          format: int32
+          minimum: 10
+          example: 60
+    CheckAnswerRequest:
+      type: object
+      required:
+        - wordId
+        - answer
+      properties:
+        wordId:
+          type: string
+          description: Identifier of the word being solved.
+          example: word-001
+        answer:
+          type: string
+          minLength: 1
+          description: User answer.
+          example: АНАГРАМА
+    CheckAnswerResponse:
+      type: object
+      required:
+        - correct
+        - normalizedAnswer
+        - message
+        - nextAction
+      properties:
+        correct:
+          type: boolean
+          description: Whether the answer is correct.
+          example: true
+        normalizedAnswer:
+          type: string
+          description: Answer normalized by the server before validation.
+          example: АНАГРАМА
+        message:
+          type: string
+          description: User-facing validation message.
+          example: Correct answer.
+        nextAction:
+          type: string
+          enum:
+            - retry
+            - finish
+          description: Suggested next UI action.
+          example: finish
+    ErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Error description.
+          example: Validation error.

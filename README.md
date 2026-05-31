@@ -113,6 +113,12 @@ npm run docs
 
 The local documentation video notes are stored in `DOCUMENTATION_VIDEO.md`. A recorded documentation demo video is included in the repository root.
 
+Additional DOCS practice documents are available in:
+
+- `docs/SSD.md` - System Specification Document.
+- `docs/BRD.md` - Business Requirements Document.
+- `docs/openapi.yaml` - Swagger/OpenAPI description for two planned API endpoints.
+
 ## Storybook
 
 Storybook includes two documented components:
